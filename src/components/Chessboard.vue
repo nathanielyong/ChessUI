@@ -1,6 +1,6 @@
 <template>
   <div>
-    <TheChessboard :board-config="boardConfig" reactive-config></TheChessboard>
+    <TheChessboard :player-color="playerColor" :board-config="boardConfig" reactive-config></TheChessboard>
     <div>
       {{ this.data }}
     </div>
@@ -18,7 +18,15 @@ export default {
     return {
       username: "",
       error: "",
-      boardConfig: reactive({}),
+      boardConfig: reactive({
+        coordinates: true,
+        events: {
+          move: (from, to, capture) => {
+            this.makeMove(from, to)
+          }
+        }
+      }),
+      playerColor: '',
       data: {},
     };
   },
@@ -28,7 +36,7 @@ export default {
       const decodedToken = jwtDecode(token);
       this.username =
         decodedToken[
-          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"
+        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"
         ];
     }
     this.fetchGame();
@@ -43,24 +51,23 @@ export default {
         this.data = response.data;
         const gameState = response.data.gameState;
         const isWhite = this.username === gameState.whitePlayerUsername
-        const newBoardConfig = {
-          fen: gameState.fen,
-          orientation: isWhite ? 'white' : 'black',
-          viewOnly: (gameState.isWhiteTurn && !isWhite) || (!gameState.isWhiteTurn && isWhite)
-        }
-        Object.assign(this.boardConfig, newBoardConfig)
 
+        this.boardConfig.fen = gameState.currentPositionFEN
+        this.boardConfig.orientation = isWhite ? 'white' : 'black'
+        this.playerColor = isWhite ? 'white' : 'black'
       } catch (err) {
         this.error = err;
       }
     },
     async makeMove(from, to) {
-      const move = from + to;
+      const move = from + '-' + to;
+      console.log(move)
       try {
-        const response = await axiosInstance.get(
-          `/api/LiveChessGame/makeMove?${move}`
+        const response = await axiosInstance.post(
+          `/api/LiveChessGame/makeMove?move=${move}`
         );
-        console.log(response);
+        console.log(response)
+        this.boardConfig.viewOnly = true
       } catch (err) {
         this.error = err;
       }

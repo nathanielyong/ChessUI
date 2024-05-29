@@ -37,7 +37,7 @@ export default {
                 console.log(response)
                 const token = response.data
                 localStorage.setItem('jwtToken', token)
-                this.$router.push('/home')
+                this.$router.push('/play')
             } catch (err) {
                 console.log(err)
                 this.errorMessage = err.response.data;
