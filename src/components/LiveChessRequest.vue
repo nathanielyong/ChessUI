@@ -51,10 +51,10 @@ export default {
           increment: this.increment,
         })
         console.log(response)
-
+        this.$router.push('/play')
       } catch (err) {
         console.log(err.message)
-        this.error = err.response.data.errorMessage
+        this.error = err.response.data
       }
     }
   }

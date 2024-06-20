@@ -42,7 +42,7 @@ export default {
                 this.errorMessage = "Passwords do not match"
             } else {
                 try {
-                    const response = await axios.post("/api/register", {
+                    const response = await axios.post("/register", {
                         username: this.username,
                         email: this.email,
                         password: this.password
