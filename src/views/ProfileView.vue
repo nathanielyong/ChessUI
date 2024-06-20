@@ -33,7 +33,8 @@
                     <td>{{ game.id }}</td>
                     <td>{{ game.whitePlayerUsername }}</td>
                     <td>{{ game.blackPlayerUsername }}</td>
-                    <td :style="{ color: (this.username === game.whitePlayerUsername && game.result === '1-0' || this.username === game.blackPlayerUsername && game.result === '0-1') ? '#4CAF50' : '#ff0000' }">{{ game.gameEndReason + " " + game.result }}</td>
+                    <td :class="{ 'text-green': (this.username === game.whitePlayerUsername && game.result === '1-0' || this.username === game.blackPlayerUsername && game.result === '0-1'),
+                                'text-red': (this.username === game.whitePlayerUsername && game.result === '0-1' || this.username === game.blackPlayerUsername && game.result === '1-0') }">{{ game.gameEndReason + " " + game.result }}</td>
                     <td>{{ game.startTime + " + " + game.increment }}</td>
                     <td>{{ game.pgn }}</td>
                     <td>{{ game.moves }}</td>
