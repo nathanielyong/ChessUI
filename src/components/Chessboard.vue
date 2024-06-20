@@ -6,7 +6,10 @@
       <div class="timers">
         <div>{{ this.isPlayerWhite ? this.blackPlayerUsername : this.whitePlayerUsername }}</div>
         <div class="timer">{{ this.isPlayerWhite ? formattedBlackTime : formattedWhiteTime }}</div>
-        <div>{{ this.result !== "" ? this.gameEndReason + " " + this.result : "" }}</div>
+        <div class="info">
+          <div>{{ this.result !== "" ? this.gameEndReason + " " + this.result : "" }}</div>
+          <button class="resign" @click="resignGame">Resign</button>
+        </div>
         <div class="timer">{{ this.isPlayerWhite ? formattedWhiteTime : formattedBlackTime }}</div>
         <div>{{ this.isPlayerWhite ? this.whitePlayerUsername : this.blackPlayerUsername }}</div>
       </div>
@@ -24,6 +27,7 @@ export default {
   data() {
     return {
       intervalId: null,
+      intervalId2: null,
       whitePlayerUsername: "",
       blackPlayerUsername: "",
       isPlayerWhite: true,
@@ -38,7 +42,6 @@ export default {
         coordinates: true
       }),
       playerColor: '',
-      data: {},
     };
   },
   computed: {
@@ -64,6 +67,7 @@ export default {
     }
     this.fetchGame()
     this.startTimer()
+    this.refreshGameInterval()
   },
   methods: {
     startTimer() {
@@ -88,13 +92,22 @@ export default {
         }
       }, 1000)
     },
+    refreshGameInterval() {
+      if (this.intervalId2) {
+        clearInterval(this.intervalId2)
+      }
+      this.intervalId2 = setInterval(() => {
+        if (this.isPlayerWhite !== this.isWhiteTurn && this.result === "") {
+          this.fetchGame()
+        }
+      }, 5000)
+    },
     async fetchGame() {
       try {
         const response = await axiosInstance.get(
           "/api/LiveChessGame/getCurrentGame"
         );
         console.log(response);
-        this.data = response.data;
         const gameState = response.data.gameState;
         this.whitePlayerUsername = gameState.whitePlayerUsername
         this.blackPlayerUsername = gameState.blackPlayerUsername
@@ -121,7 +134,6 @@ export default {
           `/api/LiveChessGame/makeMove?move=${moveString}`
         )
         console.log(response)
-        this.data = response.data
         const gameState = response.data.gameState
         this.isWhiteTurn = gameState.isWhiteTurn
         this.whiteTime = gameState.whiteTimeRemaining
@@ -129,11 +141,27 @@ export default {
         this.moveCount = gameState.moveCount
         this.result = gameState.result
         this.gameEndReason = gameState.gameEndReason
-        this.boardConfig.viewOnly = true
+        this.boardConfig.viewOnly = this.result !== ""
       } catch (err) {
         this.error = err;
       }
     },
+    async resignGame() {
+      try {
+        const response = await axiosInstance.post(
+          "/api/LiveChessGame/resignGame"
+        )
+        console.log(response)
+        const gameState = response.data.gameState
+        this.whitetime = gameState.whiteTimeRemaining
+        this.blackTime = gameState.blackTimeRemaining
+        this.result = gameState.result
+        this.gameEndReason = gameState.gameEndReason
+        this.boardConfig.viewOnly = true
+      } catch (err) {
+        this.error = err
+      }
+    }
 
   },
   components: {
@@ -165,5 +193,31 @@ export default {
   padding: 10px;
   text-align: center;
   width: 100px;
+}
+.info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  width: 200px;
+  height: 300px;
+  text-align: center;
+}
+
+.resign {
+  padding: 0.7em;
+  color: #fff;
+  background-color: red;
+  border: none;
+  width: 60%;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.resign:hover {
+  background-color: #cc0000;
 }
 </style>
