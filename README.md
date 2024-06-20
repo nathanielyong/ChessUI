@@ -26,3 +26,11 @@ npm run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+## Todos
+
+-Implement websockets for real-time communication.
+
+-Allow playback of past games. 
+
+-Add invitations and draw offers. 
