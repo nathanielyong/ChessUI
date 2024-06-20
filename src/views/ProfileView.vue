@@ -71,7 +71,7 @@ export default {
         async fetchProfile() {
             try {
                 const response = await axiosInstance.get(
-                    "/api/User/profile"
+                    "https://chessservernathan.azurewebsites.net/api/User/profile"
                 )
                 console.log(response)
                 const data = response.data
@@ -92,7 +92,7 @@ export default {
         async fetchGames() {
             try {
                 const response = await axiosInstance.get(
-                    "/api/ChessGame/myGames"
+                    "https://chessservernathan.azurewebsites.net/api/ChessGame/myGames"
                 )
                 console.log(response)
                 this.games = response.data

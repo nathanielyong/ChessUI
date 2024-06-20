@@ -44,7 +44,7 @@ export default {
     async handleNewGameRequest() {
       try {
         const token = localStorage.getItem("jwtToken")
-        const response = await axiosInstance.post("/api/LiveChessGame/newGame", {
+        const response = await axiosInstance.post("https://chessservernathan.azurewebsites.net/api/LiveChessGame/newGame", {
           colour: this.colour,
           opponentUsername: this.opponentUsername,
           startTime: this.startTime,

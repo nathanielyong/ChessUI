@@ -30,7 +30,7 @@ export default {
   methods: {
     async handleLogin() {
       try {
-        const response = await axios.post("/login", {
+        const response = await axios.post("https://chessservernathan.azurewebsites.net/login", {
           username: this.username,
           password: this.password
         })

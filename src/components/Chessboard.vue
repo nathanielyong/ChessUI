@@ -105,7 +105,7 @@ export default {
     async fetchGame() {
       try {
         const response = await axiosInstance.get(
-          "/api/LiveChessGame/getCurrentGame"
+          "https://chessservernathan.azurewebsites.net/api/LiveChessGame/getCurrentGame"
         );
         console.log(response);
         const gameState = response.data.gameState;
@@ -131,7 +131,7 @@ export default {
       console.log(moveString)
       try {
         const response = await axiosInstance.post(
-          `/api/LiveChessGame/makeMove?move=${moveString}`
+          `https://chessservernathan.azurewebsites.net/api/LiveChessGame/makeMove?move=${moveString}`
         )
         console.log(response)
         const gameState = response.data.gameState
@@ -149,7 +149,7 @@ export default {
     async resignGame() {
       try {
         const response = await axiosInstance.post(
-          "/api/LiveChessGame/resignGame"
+          "https://chessservernathan.azurewebsites.net/api/LiveChessGame/resignGame"
         )
         console.log(response)
         const gameState = response.data.gameState

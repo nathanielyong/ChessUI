@@ -42,7 +42,7 @@ export default {
                 this.errorMessage = "Passwords do not match"
             } else {
                 try {
-                    const response = await axios.post("/register", {
+                    const response = await axios.post("https://chessservernathan.azurewebsites.net/register", {
                         username: this.username,
                         email: this.email,
                         password: this.password
